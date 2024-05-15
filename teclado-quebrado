@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node{
+  char n;
+  struct node *next;
+}node;
+
+void append(node **head, node **tail,char caractere){
+  node *new = (node*) malloc(sizeof(node));
+  new->n = caractere;
+  new->next = NULL;
+  if(*head==NULL){
+    *head=new;
+    *tail=new;
+  }else{
+    (*tail)->next = new;
+    *tail = new;
+  }
+}
+
+void print(char *string){
+  int cont = 0;
+  node *head = NULL;
+  node *tail = NULL;
+  
+  while (string[cont] != '\0'){
+    append(&head, &tail, string[cont]);
+    cont++;
+  }
+  
+  node *current = head;
+  while(head!=NULL){
+    printf("%c", head->n);
+    head = head->next;
+  }
+
+  // Liberar memória alocada para os nós da lista
+  while (head != NULL) {
+      node *temp = head;
+      head = head->next;
+      free(temp);
+  }
+}
+
+
+int main(){
+  char frase[100001];
+  scanf("%s", frase);
+
+  print(frase);
+}
