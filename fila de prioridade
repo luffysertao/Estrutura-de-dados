@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct NO{
+    int priority;
+    struct NO *next;
+}NO;
+
+void organize(NO **head, num){
+    NO *new = (NO*) malloc(sizeof(NO));
+    new->next = NULL;
+    new->priority = num;
+    
+    if (*head==NULL){
+        *head = new;
+    }else{
+        if (new->priority < (*head)->priority){
+            new->next = *head;
+            *head = new;
+        }else{
+            NO *aux = *head;
+            while(new->priority > aux->next->priority){
+                aux = aux->next;
+            }
+            new->next = aux->next;
+            aux->next = new;
+        }
+    }
+}
+
+void printlist(NO *head){
+    NO *aux = head;
+    while(aux!=NULL){
+        printf("%d ", aux->priority);
+        aux = aux->next;
+    }
+    printf("\n");
+}
+
+void remover(NO **head){
+    if (*head == NULL){
+        printf("A lista esta vazia");
+        return;
+    }
+    NO *aux = *head;
+    *head = aux->next;
+    free(aux);
+}
+
+int main(){
+    NO *head = NULL;
+    int priority;
+    char question;
+    
+    while (1){
+        printf("Digite a prioridade do próximo paciente [0 para sair]: ");
+        scanf("%d", &priority);
+        if(priority==0){
+            break;
+        }
+        organize(&head, priority);
+        printf("\n");
+    }
+    printf("Os pacientes atuais na fila são: ");
+    printf("\n");
+    printlist(head);
+    
+    while(1){
+        printf("Deseja atender o próximo paciente? [S/N]: ");
+        scanf(" %c", &question);
+        if (question == 'N'){
+            break;
+        }else if(question == 'S'){
+            remover(&head);
+            printlist(head);
+        }else{
+            printf("Caractere Invalido\n");
+        }
+    }
+
+}
+
+
+
