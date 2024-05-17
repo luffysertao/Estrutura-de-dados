@@ -1,104 +1,89 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct nodePar{
-  int n;
-  struct node *next;
-}nodePar;
+typedef struct par{
+  int value;
+  struct par *nextPar;
+}par;
 
-typedef struct nodeImp{
-  int n;
-  struct nodeImp *next;
-}nodeImp;
+typedef struct impar{
+  int value;
+  struct impar *nextImpar;
+}impar;
 
-void vazia(nodePar *p){
-  if(p == NULL){
-    printf("Pilha vazia");
+void listaPar(par **head, par **tail, num){
+  par *new = (par*) malloc(sizeof(par));
+  new->value = num;
+  new->nextPar = NULL;
+  
+  if(*head==NULL){
+    *head = new;
+    *tail = new;
+  }else{
+    (*tail)->nextPar = new;
+    *tail = new;
   }
 }
 
-void pushPar(nodePar **head, int n){
-  nodePar *new = (nodePar*) malloc(sizeof(nodePar));
-
-  new->n = n;
-  new->next = *head;
-  *head = new;
-}
-
-void pushImp(nodeImp **head, int n){
-  nodeImp *new = (nodeImp*) malloc(sizeof(nodeImp));
-
-  new->n = n;
-  new->next = *head;
-  *head = new;
-}
-
-void popPar(nodePar **head){
-  if (*head == NULL){
-    printf("Pilha par vazia. Não é possível remover.\n");
+void listaImpar(impar **head, impar **tail, num){
+  impar *new = (impar*) malloc(sizeof(impar));
+  new->value = num;
+  new->nextImpar = NULL;
+  
+  if(*head==NULL){
+    *head = new;
+    *tail = new;
   }else{
-    nodePar *aux = *head;
-
-    *head = aux->next;
-    free(aux);
+    (*tail)->nextImpar = new;
+    *tail = new;
   }
 }
 
-void popImp(nodeImp **head){
-  if (*head == NULL){
-    printf("Pilha imp vazia. Não é possivel remover");
-  }else{
-    nodeImp *aux = *head;
-
-    *head = aux->next;
-    free(aux);
+void printPar(par *head){
+  par *aux = head;
+  while(aux){
+    printf("%d ", aux->value);
+    aux = aux->nextPar;
   }
   
 }
 
-void printPar(nodePar *head){
-  while(head!=NULL){
-    printf("%d ", head->n);
-    head = head->next;
+void printImpar(impar *head){
+  impar *aux = head;
+  while(aux){
+    printf("%d ", aux->value);
+    aux = aux->nextImpar;
   }
 }
 
-void printImp(nodeImp *head){
-  while(head!=NULL){
-    printf("%d ", head->n);
-    head = head->next;
-  }
-}
-
-int main(){
-  nodePar *headPar = NULL;
-  nodeImp *headImp = NULL;
+int main(void){
+  par *headPar=NULL;
+  par *tailPar = NULL;
   
+  impar *headImpar=NULL;
+  impar *tailImpar=NULL;
+  
+  int number;
+  
+  printf("Separador de Pares e ímpares\n");
   while(1){
-    int num;
-    printf("Digite um número: ");
-    scanf("%d ", &num);
-    if (num != 0){
-      if (num%2 == 0){
-        pushPar(&headPar, num);
-      }else{
-        pushImp(&headImp, num);
-      }
-    }else{
+    printf("Digite um valor: [0 para finalizar]: ");
+    scanf("%d", &number);
+    
+    if (number == 0){
       break;
     }
+    if (number%2==0){
+      listaPar(&headPar, &tailPar, number);
+    }else{
+      listaImpar(&headImpar, &tailImpar, number);
+    }
   }
-  printf("Lista dos pares: ");
+  
+  printf("Números pares: ");
   printPar(headPar);
-  printf("\n");
-  printf("Lista dos impares: ");
-  printImp(headImp);
-
-  //Liberar memória
-  while(headPar!=NULL && headImp!=NULL){
-    popPar(&headPar);
-    popImp(&headImp);
-  }
-
-  return 0;
+  printf("Números ímpares: ");
+  printImpar(headImpar);
+  
 }
+	
