@@ -12,7 +12,7 @@ typedef struct impar{
 }impar;
 
 void listaPar(par **head, par **tail, num){
-  par *new = (par*) malloc(sizeof(par));
+  par new = (par) malloc(sizeof(par));
   new->value = num;
   new->nextPar = NULL;
   
@@ -26,7 +26,7 @@ void listaPar(par **head, par **tail, num){
 }
 
 void listaImpar(impar **head, impar **tail, num){
-  impar *new = (impar*) malloc(sizeof(impar));
+  impar new = (impar) malloc(sizeof(impar));
   new->value = num;
   new->nextImpar = NULL;
   
@@ -86,4 +86,3 @@ int main(void){
   printImpar(headImpar);
   
 }
-	
