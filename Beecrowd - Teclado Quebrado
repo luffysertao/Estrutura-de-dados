@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node {
+    char n;
+    struct node *next;
+} node;
+
+void append(node **head, node **tail, node **current, char caractere) {
+    node *new = (node*) malloc(sizeof(node));
+    new->n = caractere;
+    new->next = NULL;
+    if (*head == NULL) {
+        *head = new;
+        *tail = new;
+        *current = new;
+    } else if (*current == NULL) {  // Insert at the beginning
+        new->next = *head;
+        *head = new;
+        *current = new;
+    } else {
+        new->next = (*current)->next;
+        (*current)->next = new;
+        if (*tail == *current) {
+            *tail = new;
+        }
+        *current = new;
+    }
+}
+
+void printList(node *head) {
+    node *current = head;
+    while (current != NULL) {
+        printf("%c", current->n);
+        current = current->next;
+    }
+    printf("\n");
+}
+
+void freeList(node *head) {
+    node *current = head;
+    while (current != NULL) {
+        node *temp = current;
+        current = current->next;
+        free(temp);
+    }
+}
+
+int main() {
+    char c;
+    while ((c = getchar()) != EOF) {
+        node *head = NULL;
+        node *tail = NULL;
+        node *current = NULL;
+        node *newNode = NULL;
+
+        while (c != '\n' && c != EOF) {
+            if (c == '[') {
+                current = NULL;
+            } else if (c == ']') {
+                current = tail;
+            } else {
+                append(&head, &tail, &current, c);
+            }
+            c = getchar();
+        }
+
+        printList(head);
+        freeList(head);
+
+        if (c == EOF) break;
+    }
+    return 0;
+}
