@@ -1,0 +1,106 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+//Codigo feito em dupla: Felipe Amori, Davi Macêdo
+
+typedef struct Node {
+    int value;
+    struct Node* next;
+} node;
+
+typedef struct Queue {
+    node* head;
+    node* tail;
+} queue;
+
+void discard(queue*, queue*);
+void initQueue(queue*, int);
+void append(queue*, int);
+void dequeue(queue*);
+void printList(node*);
+
+int main(void) {
+    int number = 1;
+
+    while (number) {
+        scanf("%d", &number);
+        if (number == 0) {
+            break;
+        }
+
+        queue discarted = {NULL, NULL};
+        queue remaining = {NULL, NULL};
+
+        initQueue(&remaining, number);
+        discard(&discarted, &remaining);
+
+        printf("Discarded cards:");
+        if (discarted.head != NULL) {
+            printList(discarted.head);
+        }
+        printf("\nRemaining card: %d\n", remaining.head->value);
+        
+        while (discarted.head != NULL) {
+            dequeue(&discarted);
+        }
+        while (remaining.head != NULL) {
+            dequeue(&remaining);
+        }
+    }
+    return 0;
+}
+
+void discard(queue* discarted, queue* remaining) {
+    while (remaining->head != remaining->tail) {
+        append(discarted, remaining->head->value);
+        dequeue(remaining);
+        append(remaining, remaining->head->value);
+        dequeue(remaining);
+    }
+}
+
+void initQueue(queue* pseudoStack, int number) {
+    for (int i = 1; i <= number; ++i) {
+        append(pseudoStack, i);
+    }
+}
+
+void append(queue* pseudoStack, int value) {
+    node* new = (node*)malloc(sizeof(node));
+    new->value = value;
+    new->next = NULL;
+
+    if (!pseudoStack->head) {
+        pseudoStack->head = new;
+        pseudoStack->tail = new;
+    } else {
+        pseudoStack->tail->next = new;
+        pseudoStack->tail = new;
+    }
+}
+
+void dequeue(queue* pseudoStack) {
+    if (!pseudoStack->head) {
+        return;
+    }
+    node* aux = pseudoStack->head;
+    pseudoStack->head = aux->next;
+    if (pseudoStack->head == NULL) {
+        pseudoStack->tail = NULL;
+    }
+    free(aux);
+}
+
+void printList(node* head) {
+    node* aux = head;
+    int first = 1;
+    while (aux != NULL) {
+        if (first) {
+            printf(" %d", aux->value);
+            first = 0;
+        } else {
+            printf(", %d", aux->value);
+        }
+        aux = aux->next;
+    }
+}
