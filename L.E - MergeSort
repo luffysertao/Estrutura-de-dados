@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void merge(int *arr, int left, int right, int size) {
+    int middle, i, j, k, *aux;
+    aux = (int *)malloc(size * sizeof(int)); // Allocate memory for the auxiliary array
+
+    middle = (left + right) / 2;
+    i = left;
+    j = middle + 1;
+    k = left;
+
+    // Merge the subarrays
+    while (i <= middle && j <= right) {
+        if (arr[i] <= arr[j]) {
+            aux[k] = arr[i];
+            i++;
+        } else {
+            aux[k] = arr[j];
+            j++;
+        }
+        k++;
+    }
+
+    // Copy remaining elements of the first subarray, if any
+    while (i <= middle) {
+        aux[k] = arr[i];
+        i++;
+        k++;
+    }
+
+    // Copy remaining elements of the second subarray, if any
+    while (j <= right) {
+        aux[k] = arr[j];
+        j++;
+        k++;
+    }
+
+    // Copy the auxiliary array back to the original array
+    for (i = left; i <= right; i++) {
+        arr[i] = aux[i];
+    }
+
+    free(aux); 
+}
+
+void mergesort(int *arr, int left, int right, int size) {
+    if (left >= right) { // Base case: if the subarray has one element, it's already sorted
+        return;
+    }
+    int middle;
+    middle = (left + right) / 2;
+
+    mergesort(arr, left, middle, size); // Sort the first subarray
+    mergesort(arr, middle + 1, right, size); // Sort the second subarray
+    merge(arr, left, right, size); // Merge the sorted subarrays
+}
+
+int main(void) {
+    int *arr = NULL;
+    int size = 0;
+    int capacity = 10;
+    int element;
+
+    arr = (int *)malloc(capacity * sizeof(int));
+    if (arr == NULL) {
+        printf("Memory allocation failed\n");
+        return 1;
+    }
+
+    printf("Enter elements one by one. Type 'q' to finish:\n");
+
+    while (1) {
+        char input[10];
+        if (scanf("%s", input) != 1) {
+            break;
+        }
+        if (input[0] == 'q') {
+            break;
+        }
+        element = atoi(input);
+
+        if (size >= capacity) {
+            capacity *= 2;
+            arr = (int *)realloc(arr, capacity * sizeof(int));
+            if (arr == NULL) {
+                printf("Memory reallocation failed\n");
+                return 1;
+            }
+        }
+
+        arr[size] = element;
+        size++;
+    }
+
+    mergesort(arr, 0, size - 1, size);
+
+    printf("Sorted array:\n");
+    for (int i = 0; i < size; i++) {
+        printf("%d | ", arr[i]);
+    }
+    printf("\n");
+
+    free(arr);
+
+    return 0;
+}
