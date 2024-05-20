@@ -1,94 +1,85 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct NO{
-  int dado;
-  struct NO *prox;
-} NO;
+typedef struct node{
+  int value;
+  struct node *next;
+}node;
 
-typedef struct FILA{
-  NO *ini;
-  NO *fim;
-}FILA;
+typedef struct queue{
+  node *start;
+  node *end;
+}queue;
 
-//Inicializar fila como vazia
-void inicializaFila(FILA *f){
-  f->ini = NULL;
-  f->fim = NULL;
-}
+void push(queue *q, int number){
+  node *new = (node*) malloc(sizeof(node));
+  new->next = NULL;
+  new->value = number;
 
-//Enfileirar Fila
-void enfileira(int dado, FILA *f){
-  NO *ptr = (NO*) malloc(sizeof(NO));
-  if (ptr == NULL){
-    printf("Erro alocação. \n");
-    return;
-  } else {
-    ptr->dado = dado;
-    ptr->prox = NULL;
-    if(f->ini == NULL){
-      f->ini = ptr;
-    }else{
-      f->fim->prox = ptr;
-    }
-    f->fim = ptr;
-  }
-}
-
-//Desenfileirar Fila
-int desenfileira(FILA *f){
-  NO *ptr = f->ini;
-  int dado;
-  if(ptr != NULL){
-    f->ini = ptr->prox;
-    ptr->prox = NULL;
-    dado = ptr->dado;
-    free(ptr);
-    if (f->ini == NULL){
-      f->fim = NULL;
-    }
-    return dado;
-  }else{
-    printf("Fila vazia.\n");
+  if(q->start==NULL){
+    q->start = new;
+    q->end = new;
     return;
   }
+  q->end->next = new;
+  q->end=new;
 }
 
-//Imprimir Fila
-void imprimirFila(FILA *f){
-  NO *ptr = f->ini;
-  if(ptr != NULL){
-    while(ptr != NULL){
-      printf("%d ", ptr->dado);
-      ptr = ptr->prox;
-    }
-    printf("\n");
-  }else{
-    printf("Fila vazia.\n");
+void pop(queue *q){
+  if (q->start==NULL){
+    printf("Empty Queue");
     return;
   }
+  node *aux = q->start;
+  q->start = aux->next;
+  free(aux);
 }
 
-int main(){
-  FILA *f1 = (FILA*) malloc(sizeof(FILA));
-  if(f1 == NULL){
-    printf("Erro de alocação.\n");
-    exit(-1);
-  }else{
-    inicializaFila(f1);
-    
-    enfileira(10, f1);
-    enfileira(20, f1);
-    enfileira(30, f1);
-
-    imprimirFila(f1);
-
-    printf("Tentando desenfileirar - removido: %d\n", desenfileira(f1));
-      imprimirFila(f1);
-    printf("Tentando desenfileirar - removido: %d\n", desenfileira(f1));
-      imprimirFila(f1);
-    printf("Tentando desenfileirar - removido: %d\n", desenfileira(f1));
-      imprimirFila(f1);
-    
+void printQueue(queue *q){
+  node *aux = q->start;
+  while (aux){
+    printf("%d ", aux->value);
+    aux = aux->next;
   }
+  printf("\n");
+}
+
+
+queue *initialization(){
+  queue *head = (queue*) malloc(sizeof(queue));
+  if (head != NULL){
+    head->start = NULL;
+    head->end = NULL;
+  }
+  return head;
+}
+
+int main(void){
+  queue *head = initialization();
+
+  int number;
+  char selection[2];
+
+  while(1){
+    printf("Add a number in the queue [-0 To finish]: ");
+    scanf("%d", &number);
+    if(number==0){
+      break;
+    }
+    push(head, number);
+  }
+  printQueue(head);
+  
+  while(1){
+    printf("Do you want to remove the next element? [Y/N]: ");
+    scanf(" %c", &selection[0]);
+    selection[1] = '\0';
+    if (selection[0] == 'N' || selection[0] == 'n'){
+      break;
+    }
+    pop(head);
+    printQueue(head);
+  }
+
+  return 0;
 }
