@@ -44,7 +44,6 @@ void printQueue(queue *q){
   printf("\n");
 }
 
-
 queue *initialization(){
   queue *head = (queue*) malloc(sizeof(queue));
   if (head != NULL){
@@ -52,6 +51,13 @@ queue *initialization(){
     head->end = NULL;
   }
   return head;
+}
+
+void freeMemory(queue *q){
+  while(q->start){
+    pop(q);
+  }
+  free(q);
 }
 
 int main(void){
@@ -81,5 +87,7 @@ int main(void){
     printQueue(head);
   }
 
+  freeMemory(head);
+  
   return 0;
 }
