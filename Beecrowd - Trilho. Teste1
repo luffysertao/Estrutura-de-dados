@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct rail{
+    int value;
+    struct rail *next;
+}rail;
+
+typedef struct inverse{
+    int value;
+    struct inverse *next;
+}inverse;
+
+void push(rail **head, int number){
+    rail *new = (rail*) malloc(sizeof(rail));
+    new->next = NULL;
+    new->value = value;
+
+    if ((*head)==NULL){
+        (*head) = new;
+        return;
+    }
+    rail *aux = (*head);
+    aux->next = new;
+}
+
+void check(rail **head, inverse **headIn){
+    
+}
+
+void printRail(rail *head){
+    rail *aux = head;
+    while(aux){
+        printf("%d ", aux->value);
+        aux = aux->next;
+    }
+    printf("\n");
+}
+
+void printInv(inverse *headIn){
+    inverse *aux = headIn;
+    while(aux){
+        printf("%d ", aux->value);
+        aux = aux->next;
+    }
+    printf("\n");
+}
+
+void freeRail(rail **head){
+    rail *aux = (*head);
+    while(aux){
+        rail *aux = (*head);
+        (*head) = aux->next;
+        free(aux);
+    }
+}
+
+
+int main(void){
+    int size;
+    int number;
+
+    while(1){
+        rail *head = NULL;
+        inverse *headIn = NULL;
+
+        scanf("%d ", &size);
+        if(size==0){
+            break;
+        }
+        for(int i==0, i<size, i++){
+            scanf("%d ", &value);
+            push(&head, number);
+        }
+        check(&headIn);
+        printRail(head);
+        printInv(headIn);
+        freeRail(head);
+    }
+    return 0;
+}
