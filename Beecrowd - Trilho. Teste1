@@ -3,6 +3,7 @@
 
 typedef struct rail{
     int value;
+    struct rail *previous;
     struct rail *next;
 }rail;
 
@@ -22,6 +23,8 @@ void push(rail **head, int number){
     }
     rail *aux = (*head);
     aux->next = new;
+    new->previous = aux;
+    
 }
 
 void check(rail **head, inverse **headIn){
