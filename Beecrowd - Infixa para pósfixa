@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int isOperator(char c) {
+    return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^');
+}
+
+int precedence(char c) {
+    if (c == '^')
+        return 3;    
+    else if (c == '*' || c == '/')
+        return 2;
+    else if (c == '+' || c == '-')
+        return 1;
+    else
+        return 0;
+}
+
+void infixToPostfix(char *expression) {
+    char stack[300];
+    int top = -1;
+    int len = strlen(expression);
+
+    for (int i = 0; i < len; i++) {
+        if ((expression[i] >= 'a' && expression[i] <= 'z') || (expression[i] >= 'A' && expression[i] <= 'Z') || (expression[i] >= '0' && expression[i] <= '9')) {
+            printf("%c", expression[i]);
+        }
+        else if (expression[i] == '(') {
+            stack[++top] = '(';
+        }
+        else if (expression[i] == ')') {
+            while (top != -1 && stack[top] != '(') {
+                printf("%c", stack[top--]);
+            }
+            if (top != -1)
+                top--;
+        }
+        else if (isOperator(expression[i])) {
+            while (top != -1 && precedence(stack[top]) >= precedence(expression[i])) {
+                printf("%c", stack[top--]);
+            }
+            stack[++top] = expression[i];
+        }
+    }
+
+    while (top != -1) {
+        printf("%c", stack[top--]);
+    }
+
+    printf("\n");
+}
+
+int main() {
+    int N;
+    scanf("%d", &N);
+    getchar();
+
+    for (int i = 0; i < N; i++) {
+        char expression[300];
+        fgets(expression, 300, stdin);
+        infixToPostfix(expression);
+    }
+
+    return 0;
+}
