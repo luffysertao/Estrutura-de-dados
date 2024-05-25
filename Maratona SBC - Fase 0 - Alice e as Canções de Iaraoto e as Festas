@@ -1,0 +1,18 @@
+#include <stdio.h>
+
+int main(void){
+  int a, b, c;
+  int cancoes[4] = {0, 1, 2, 3};
+
+  scanf("%d %d %d", &a, &b, &c);
+
+  int soma_entrada = a + b + c;
+
+  int soma_total_cancoes = 1 + 2 + 3;
+
+  int cancao_nao_ouvida = soma_total_cancoes - soma_entrada;
+
+  printf("%d\n", cancao_nao_ouvida);
+  
+  return 0;
+}
