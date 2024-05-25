@@ -1,0 +1,21 @@
+#include <stdio.h>
+
+int main() {
+    int extensao_rio;
+    int velocidade_remate;
+    int horas;
+    int minutos;
+
+    scanf("%d", &extensao_rio);
+    scanf("%d", &velocidade_remate);
+
+    horas = (int)(extensao_rio / velocidade_remate);
+    horas = horas + 19;
+    horas = (int)horas % 24;
+
+    minutos = (int)(((extensao_rio % velocidade_remate) * 60) / velocidade_remate);
+
+    printf("%02d:%02d\n", horas, minutos);
+
+    return 0;
+}
