@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct no{
+  int content;
+  struct no *left, *right;
+}no;
+
+typedef struct treeB{
+  no *root;
+}treeB;
+
+void insertLeft(no *no, int value){
+  if(no->left == NULL){
+    no *new = (no*) malloc(sizeof(no));
+    new->content = value;
+    new->left = NULL;
+    new->right = NULL;
+    no->left = new;
+    return;
+  }
+  
+  if (value < no->left->content){
+    insertLeft(no->left, value);
+  }else{
+    insertRight(no->left, value);
+  }
+}
+
+void insertRight(no *no, int value){
+  if(no->right == NULL){
+    no *new = (no*) malloc(sizeof(no));
+    new->content = value;
+    new->left = NULL;
+    new->right = NULL;
+    no->right = new;
+    return;
+  }
+  if(value < no->right->content){
+    insertLeft(no->right, value);
+  }else{
+    insertRight(no->right, value);
+  }
+}
+
+void insert(treeB *tree, int value){
+  if(tree->root == NULL){
+    no *new = (no*) malloc(sizeof(no));
+    new->content = value;
+    new->left = NULL;
+    new->right = NULL;
+    tree->root = new;
+    return;
+  }
+  if (value < tree->root->content){
+    insertLeft(tree->root, value);
+  }else{
+    insertRight(tree->root, value);
+  }
+}
+
+void printTree(no *root){
+  if(root){
+    printf("%d ", root->content);
+    printTree(root->left);
+    printTree(root->right);
+  }
+}
+
+int main(void){
+  int option, value;
+  treeeB *tree = NULL;
+  
+  do{
+    printf("\n0 - Quit
+     \n1 - Insert")
+  }while(op!=0);
+  
+  return 0;
+}
