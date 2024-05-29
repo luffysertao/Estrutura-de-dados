@@ -3,43 +3,49 @@
 
 typedef struct no{
   int content;
-  struct no *left, *right;
+  struct no *left;
+  struct no *right;
 }no;
 
 typedef struct treeB{
   no *root;
 }treeB;
 
-void insertLeft(no *no, int value){
-  if(no->left == NULL){
+void insertLeft(no* node, int value);
+void insertRight(no* node, int value);
+void insert(treeB* tree, int value);
+void printTree(no* root);
+
+void insertLeft(no *node, int value){
+  if(node->left == NULL){
     no *new = (no*) malloc(sizeof(no));
     new->content = value;
     new->left = NULL;
     new->right = NULL;
-    no->left = new;
+    node->left = new;
     return;
   }
-  
-  if (value < no->left->content){
-    insertLeft(no->left, value);
+
+  if (value < node->left->content){
+    insertLeft(node->left, value);
   }else{
-    insertRight(no->left, value);
+    insertRight(node->left, value);
   }
 }
 
-void insertRight(no *no, int value){
-  if(no->right == NULL){
+void insertRight(no *node, int value){
+  if(node->right == NULL){
     no *new = (no*) malloc(sizeof(no));
     new->content = value;
     new->left = NULL;
     new->right = NULL;
-    no->right = new;
+    node->right = new;
     return;
   }
-  if(value < no->right->content){
-    insertLeft(no->right, value);
+  if(value < node->right->content){
+    insertLeft(node->right, value);
   }else{
-    insertRight(no->right, value);
+    insertRight(node->right, value);
   }
 }
 
@@ -54,27 +60,47 @@ void insert(treeB *tree, int value){
   }
   if (value < tree->root->content){
     insertLeft(tree->root, value);
-  }else{
+  }else if (value > tree->root->content){
     insertRight(tree->root, value);
+  }else{
+    printf("ERROR. Number already allocated");
   }
 }
 
 void printTree(no *root){
-  if(root){
-    printf("%d ", root->content);
+  if(root != NULL){
     printTree(root->left);
+    printf("%d ", root->content);
     printTree(root->right);
   }
 }
 
 int main(void){
   int option, value;
-  treeeB *tree = NULL;
+  treeB tree;
+  tree.root = NULL;
   
   do{
-    printf("\n0 - Quit
-     \n1 - Insert")
-  }while(op!=0);
-  
+    printf("\n0 - Quit \n1 - Insert \n2 - Print\n");
+    scanf("%d", &option);
+
+    switch(option){
+      case 0:
+        printf("\nLeaving...\n");
+        break;
+      case 1:
+        printf("Enter a number: ");
+        scanf("%d", &value);
+        insert(&tree, value);
+        break;
+      case 2:
+        printf("Binary tree printing: ");
+        printTree(tree.root);
+        break;
+      default:
+        printf("\nInvalid option...\n");
+    }
+  }while(option!=0);
+
   return 0;
 }
