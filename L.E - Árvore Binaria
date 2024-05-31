@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct no{
+  int content;
+  struct no *left;
+  struct no *right;
+}no;
+
+no *insertFast(no *root, int value){
+  if(root==NULL){
+    no *new = (no*) malloc(sizeof(no));
+    new->content = value;
+    new->left = NULL;
+    new->right = NULL;
+    return new;
+  }else{
+    if(value < root->content){
+      root->left = insertFast(root->left, value);
+    }
+    if(value > root->content){
+      root->right = insertFast(root->right, value);
+    }
+    return root;
+  }
+}
+
+int size(no *root){
+  if(root == NULL){
+    return 0;
+  }
+  return 1 + size(root->left) + size(root->right);
+}
+
+void printTree(no *root){
+  if(root != NULL){
+    printTree(root->left);
+    printf("%d ", root->content);
+    printTree(root->right);
+  }
+}
+
+int main(void){
+  int option, value;
+
+  no *root = NULL;
+  
+  do{
+    printf("\n0 - Quit \n1 - Insert \n2 - Print\n");
+    scanf("%d", &option);
+
+    switch(option){
+      case 0:
+        printf("\nLeaving...\n");
+        break;
+      case 1:
+        printf("Enter a number: ");
+        scanf("%d", &value);
+        root = insertFast(root, value);
+        break;
+      case 2:
+        printf("Binary tree printing: ");
+        printTree(root);
+        printf("\n");
+        printf("Size: %d\n", size(root));
+        break;
+      default:
+        printf("\nInvalid option...\n");
+    }
+  }while(option!=0);
+
+  return 0;
+}
