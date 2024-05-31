@@ -32,6 +32,22 @@ int size(no *root){
   return 1 + size(root->left) + size(root->right);
 }
 
+int find(no *root, int value){
+  if(root == NULL){
+    return "This number does not exist";
+  }else{
+    if(root->content == value){
+      return "This number exists";
+    }else{
+      if (value < root->content){
+        return find(root->left, value);
+      }else{
+        return find(root->right, value);
+      }
+    }
+  }
+}
+
 void printTree(no *root){
   if(root != NULL){
     printTree(root->left);
@@ -46,7 +62,7 @@ int main(void){
   no *root = NULL;
   
   do{
-    printf("\n0 - Quit \n1 - Insert \n2 - Print\n");
+    printf("\n0 - Quit \n1 - Insert \n2 - Print\n3 - Find\n");
     scanf("%d", &option);
 
     switch(option){
@@ -63,6 +79,11 @@ int main(void){
         printTree(root);
         printf("\n");
         printf("Size: %d\n", size(root));
+        break;
+      case 3:
+        printf("Enter the value you want to search: ");
+        scanf("%d", &value);
+        printf("Search result: %s\n", find(root, value));
         break;
       default:
         printf("\nInvalid option...\n");
