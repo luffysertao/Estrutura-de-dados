@@ -7,7 +7,8 @@ typedef struct no{
   struct no *right;
 }no;
 
-no *insertFast(no *root, int value){
+//Inserir Elemento
+no *insert(no *root, int value){
   if(root==NULL){
     no *new = (no*) malloc(sizeof(no));
     new->content = value;
@@ -16,26 +17,18 @@ no *insertFast(no *root, int value){
     return new;
   }else{
     if(value < root->content){
-      root->left = insertFast(root->left, value);
+      root->left = insert(root->left, value);
     }
     if(value > root->content){
-      root->right = insertFast(root->right, value);
+      root->right = insert(root->right, value);
     }
     return root;
   }
 }
 
-int size(no *root){
-  if(root == NULL){
-    return 0;
-  }
-  return 1 + size(root->left) + size(root->right);
-}
-
+//Encontrar Elemento
 int find(no *root, int value){
-  if(root == NULL){
-    return "This number does not exist";
-  }else{
+  if(root){
     if(root->content == value){
       return "This number exists";
     }else{
@@ -46,8 +39,57 @@ int find(no *root, int value){
       }
     }
   }
+  return "This number does not exist";
 }
 
+//Encontrar No
+no *findNo(no *root, int value){
+  if(root){
+    if(root->content == value){
+      return root;
+    }else{
+      if (value < root->content){
+        return findNo(root->left, value);
+      }else{
+        return findNo(root->right, value);
+      }
+    }
+  }
+  return  NULL;
+}
+
+//Tamanho da Arvore
+int size(no *root){
+  if(root == NULL){
+    return 0;
+  }
+  return 1 + size(root->left) + size(root->right);
+}
+
+//Altura da Arvore
+int height(no *root){
+  if (root == NULL){
+    return -1;
+  }else{
+    int lef = height(root->left);
+    int rig = height(root->right);
+    if(lef > rig){
+      return lef + 1;
+    }
+    return rig + 1;
+  }
+}
+
+//Altura da Sub-Arvore(ou seja do nó)
+int heightNo(no *root, int value){
+  no *node = findNo(root, value);
+  if (node){
+    return height(node);
+  }
+  return -1;
+}
+
+//Imprimir Arvore
 void printTree(no *root){
   if(root != NULL){
     printTree(root->left);
@@ -56,35 +98,45 @@ void printTree(no *root){
   }
 }
 
+//Remover Elemento
+
 int main(void){
   int option, value;
 
   no *root = NULL;
   
   do{
-    printf("\n0 - Quit \n1 - Insert \n2 - Print\n3 - Find\n");
+    printf("\n0 - Quit \n1 - Insert \n2 - Print\n3 - Find\n4 - TreeHeight\n5 - NoHeight\n");
     scanf("%d", &option);
 
     switch(option){
       case 0:
-        printf("\nLeaving...\n");
+        printf("\n\tLeaving...\n");
         break;
       case 1:
         printf("Enter a number: ");
         scanf("%d", &value);
-        root = insertFast(root, value);
+        root = insert(root, value);
         break;
       case 2:
-        printf("Binary tree printing: ");
+        printf("\tBinary tree printing: ");
         printTree(root);
         printf("\n");
-        printf("Size: %d\n", size(root));
+        printf("\tSize: %d\n", size(root));
         break;
       case 3:
         printf("Enter the value you want to search: ");
         scanf("%d", &value);
-        printf("Search result: %s\n", find(root, value));
+        printf("\tSearch result: %s\n", find(root, value));
         break;
+      case 4:
+        printf("\n\tTreeHeight: %d\n\n", height(root));
+        break;
+      case 5:
+        printf("What number do you want to see the height? ");
+        scanf("%d", &value);
+        printf("\n\tNoheight: %d\n\n", heightNo(root, value));
+      break;
       default:
         printf("\nInvalid option...\n");
     }
