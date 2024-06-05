@@ -23,8 +23,10 @@ no *insert(no *root, int value){
     if(value > root->content){
       root->right = insert(root->right, value);
     }
-    return root;
   }
+
+  root = balance(root);
+  return root;
 }
 
 //Encontrar Elemento
@@ -67,7 +69,7 @@ int size(no *root){
   return 1 + size(root->left) + size(root->right);
 }
 
-//Altura da Arvore
+//Altura 
 int height(no *root){ //500
   int heightAux;
   if (root == NULL){
@@ -76,27 +78,14 @@ int height(no *root){ //500
     int lef = height(root->left);//-1
     int rig = height(root->right);//-1
     if(lef > rig){
-      heightAux = lef + 1;
-      root->height = heightAux;
       return lef + 1;
     }
-    heightAux = rig + 1;
-    root->height = heightAux;
     return rig + 1;
   }
 }
 
-//Fator de Balanceamento da Arvore
-int balancing(no *node){
-  if(node){
-    return (height(node->right) - height(node->left));
-  }
-  return 0;
-}
-
-//Fator de Balanceamento da SubArvore
-int balancingNo(no *root, int value){
-  no *node = findNo(root, value);
+//Fator de Balanceamento
+int balancingFactor(no *node){
   if(node){
     return (height(node->right) - height(node->left));
   }
@@ -130,10 +119,35 @@ no *rightRotation(no *r){
   return y;
 }
 
-//Rotação Dupla (Esquerda e Direita)
-no *RightLeftRotation(no *r){
+//Rotação Dupla - DireitaEsquerda
+no *rightLeftRotation(no *r){
   r->right = rightRotation(r->right);
   return leftRotation(r);
+}
+
+//Rotação Dupla - EsquerdaDireita
+no *leftRightRotation(no *r){
+  r->left = leftRotation(r->left);
+  return rightRotation(r);
+}
+
+//Balancear a arvore
+no *balance(no *root){
+  int bf = balancingFactor(root);
+  if(bf < -1 && balancingFactor(root->right) <= 0){
+    root = rightRotation(root);
+  }
+  else if(bf > 1 && balancingFactor(root->left) >= 0){
+    root = leftRotation(root);
+  }
+  else if(bf > 1 && balancingFactor(root->left) < 0){
+    root = rightLeftRotation(root);
+  }
+  else if(bf < 1 && balancingFactor(root->right) > 0){
+    root = leftRightRotation(root);
+  }
+
+  return root;
 }
 
 //Imprimir Arvore InOrder
@@ -164,7 +178,27 @@ void printTreePosOrder(no *root){
 }
 
 //Remover Elemento
-
+no *remove(no *root){
+  if(root == NULL){
+    printf("Element not found");
+    return NULL;
+  }else{
+    if(root->value == value){
+      if(root->left == NULL && root->right == NULL){
+        free(root):
+        printf("Leaf element removed: %d !\n", value);
+        return NULL;
+      }else{
+        if(root->left != NULL && root->right != NULL){
+          no *aux = root->left;
+          while(aux->right){
+            aux = aux->right
+          }
+        }
+      }
+    }
+  }
+}
 
 //Função principal
 int main(void){
@@ -173,7 +207,7 @@ int main(void){
   no *root = NULL;
 
   do{
-    printf("\n0 - Quit \n1 - Insert \n2 - Print(IN ORDER, PRE ORDER, PÓS ORDER)\n3 - Find\n4 - Height(Tree)\n5 - Height(Secondary tree)\n6 - Balancing factor(Tree)\n7 - Balancing factor(Secondary tree)\n");
+    printf("\n0 - Quit \n1 - Insert \n2 - Print(IN ORDER, PRE ORDER, PÓS ORDER)\n3 - Find\n4 - Height(Tree)\n5 - Height(Secondary tree)\n6 - Balancing factor(Tree)\n7 - Balancing factor(Secondary tree)\n8 - Remove element");
     scanf("%d", &option);
 
     switch(option){
@@ -212,12 +246,19 @@ int main(void){
         printf("\n\tNoheight: %d\n", height(aux));
         break;
       case 6:
-        printf("\n\tBalancing factor: %d\n", balancing(root));
+        printf("\n\tBalancing factor: %d\n", balancingFactor(root));
         break;
       case 7:
         printf("What number do you want to see the balancing factor? ");
         scanf("%d", &value);
-        printf("\n\tBalancing factor: %d\n", balancingNo(root, value));
+        no *node = findNo(root, value);
+        printf("\n\tBalancing factor: %d\n", balancingFactor(node));
+        break;
+      case 8:
+        printf("What number do you want to remove? ");
+        scanf("%d", &value);
+        no *node = findNo(root, value);
+        remove(node, value);
         break;
       default:
         printf("\nInvalid option...\n");
