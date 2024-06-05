@@ -5,7 +5,6 @@ typedef struct no{
   int content;
   struct no *left;
   struct no *right;
-  int height;
 }no;
 
 //Inserir Elemento
@@ -57,7 +56,7 @@ no *findNo(no *root, int value){
       }
     }
   }
-  return  NULL;
+  return NULL;
 }
 
 //Tamanho da Arvore
@@ -69,13 +68,13 @@ int size(no *root){
 }
 
 //Altura da Arvore
-int height(no *root){
+int height(no *root){ //500
   int heightAux;
   if (root == NULL){
     return -1;
   }else{
-    int lef = height(root->left);
-    int rig = height(root->right);
+    int lef = height(root->left);//-1
+    int rig = height(root->right);//-1
     if(lef > rig){
       heightAux = lef + 1;
       root->height = heightAux;
@@ -112,27 +111,60 @@ int bigger(int a, int b){
 //Rotação Esquerda
 no *leftRotation(no *r){
   no *y, *f;
+  y = r->left;
+  f = y->right;
+
+  y->right = r;
+  r->left = f;
+  return y;
+}
+
+//Rotação a Direita
+no *rightRotation(no *r){
+  no *y, *f;
   y = r->right;
   f = y->left;
 
   y->left = r;
   r->right = f;
-
-  r->height = bigger(height(r->left), height(r->right)) + 1;
-  y->height = bigger(height(y->left), height(y->right)) + 1;
   return y;
 }
 
-//Imprimir Arvore
-void printTree(no *root){
+//Rotação Dupla (Esquerda e Direita)
+no *RightLeftRotation(no *r){
+  r->right = rightRotation(r->right);
+  return leftRotation(r);
+}
+
+//Imprimir Arvore InOrder
+void printTreeInOrder(no *root){
   if(root != NULL){
-    printTree(root->left);
+    printTreeInOrder(root->left);
     printf("%d ", root->content);
-    printTree(root->right);
+    printTreeInOrder(root->right);
+  }
+}
+
+//Imprimir Arvore PreOrder
+void printTreePreOrder(no *root){
+  if(root != NULL){
+    printf("%d ", root->content);
+    printTreePreOrder(root->left);
+    printTreePreOrder(root->right);
+  }
+}
+
+//Imprimir Arvore InOrder
+void printTreePosOrder(no *root){
+  if(root != NULL){
+    printTreePosOrder(root->left);
+    printTreePosOrder(root->right);
+    printf("%d ", root->content);
   }
 }
 
 //Remover Elemento
+
 
 //Função principal
 int main(void){
@@ -141,7 +173,7 @@ int main(void){
   no *root = NULL;
 
   do{
-    printf("\n0 - Quit \n1 - Insert \n2 - Print\n3 - Find\n4 - Height(Tree)\n5 - Height(Secondary tree)\n6 - Balancing factor(Tree)\n7 - Balancing factor(Secondary tree)\n");
+    printf("\n0 - Quit \n1 - Insert \n2 - Print(IN ORDER, PRE ORDER, PÓS ORDER)\n3 - Find\n4 - Height(Tree)\n5 - Height(Secondary tree)\n6 - Balancing factor(Tree)\n7 - Balancing factor(Secondary tree)\n");
     scanf("%d", &option);
 
     switch(option){
@@ -154,8 +186,14 @@ int main(void){
         root = insert(root, value);
         break;
       case 2:
-        printf("\tBinary tree printing: ");
-        printTree(root);
+        printf("\tBinary tree printing IN ORDER: ");
+        printTreeInOrder(root);
+        printf("\n");
+        printf("\tBinary tree printing PRE ORDER: ");
+        printTreePreOrder(root);
+        printf("\n");
+        printf("\tBinary tree printing PÓS ORDER: ");
+        printTreePosOrder(root);
         printf("\n");
         printf("\tSize: %d\n", size(root));
         break;
@@ -170,7 +208,7 @@ int main(void){
       case 5:
         printf("What number do you want to see the height? ");
         scanf("%d", &value);
-        no *aux = find(root, value);
+        no *aux = findNo(root, value);
         printf("\n\tNoheight: %d\n", height(aux));
         break;
       case 6:
