@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct no {
+    char content;
+    struct no *left, *right;
+} no;
+
+no* createNode(char content) {
+    no* node = (no*)malloc(sizeof(no));
+    node->content = content;
+    node->left = node->right = NULL;
+    return node;
+}
+
+int search(char arr[], int start, int end, char value) {
+    for (int i = start; i <= end; i++) {
+        if (arr[i] == value)
+            return i;
+    }
+    return -1;
+}
+
+no* buildTree(char infix[], char prefix[], int inStart, int inEnd, int* preIndex) {
+    if (inStart > inEnd)
+        return NULL;
+
+    char curr = prefix[*preIndex];
+    (*preIndex)++;
+    no* tNode = createNode(curr);
+
+    if (inStart == inEnd)
+        return tNode;
+
+    int inIndex = search(infix, inStart, inEnd, curr);
+
+    tNode->left = buildTree(infix, prefix, inStart, inIndex - 1, preIndex);
+    tNode->right = buildTree(infix, prefix, inIndex + 1, inEnd, preIndex);
+
+    return tNode;
+}
+
+void printTreePosOrder(no* root) {
+    if (root != NULL) {
+        printTreePosOrder(root->left);
+        printTreePosOrder(root->right);
+        printf("%c", root->content);
+    }
+}
+
+int main() {
+    int C;
+    scanf("%d", &C);
+
+    for (int i = 0; i < C; i++) {
+        int N;
+        scanf("%d", &N);
+        char prefix[N + 1], infix[N + 1];
+        scanf("%s %s", prefix, infix);
+
+        int preIndex = 0;
+        no* root = buildTree(infix, prefix, 0, N - 1, &preIndex);
+
+        printTreePosOrder(root);
+        printf("\n");
+    }
+
+    return 0;
+}
