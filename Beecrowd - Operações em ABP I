@@ -1,0 +1,100 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
+//Felipe Amorim e Davi Macedo
+
+typedef struct no{
+  char content;
+  struct no *left;
+  struct no *right;
+}no;
+
+no *insert(no *root, char value){
+  if(root==NULL){
+    no *new = (no*) malloc(sizeof(no));
+    new->content = value;
+    new->left = NULL;
+    new->right = NULL;
+    return new;
+  }else{
+    if(value < root->content){
+      root->left = insert(root->left, value);
+    }
+    if(value > root->content){
+      root->right = insert(root->right, value);
+    }
+    return root;
+  }
+}
+
+bool find(no* no, char value) {
+    if (no == NULL) return false;
+    if (no->content == value) return true;
+    if (value < no->content)
+        return find(no->left, value);
+    return find(no->right, value);
+}
+
+void printTreeInOrder(no *root){
+  if(root != NULL){
+    printTreeInOrder(root->left);
+    printf("%c ", root->content);
+    printTreeInOrder(root->right);
+  }
+}
+
+void printTreePreOrder(no *root){
+  if(root != NULL){
+    printf("%c ", root->content);
+    printTreePreOrder(root->left);
+    printTreePreOrder(root->right);
+  }
+}
+
+void printTreePosOrder(no *root){
+  if(root != NULL){
+    printTreePosOrder(root->left);
+    printTreePosOrder(root->right);
+    printf("%c ", root->content);
+  }
+}
+
+void freeTree(no* no) {
+    if (no != NULL) {
+        freeTree(no->left);
+        freeTree(no->right);
+        free(no);
+    }
+}
+
+int main() {
+    no* root = NULL;
+    char input[10];
+    char value;
+
+    while (scanf("%s", input) != EOF) {
+        if (strcmp(input, "I") == 0) {
+            scanf(" %c", &value);
+            root = insert(root, value);
+        } else if (strcmp(input, "INFIXA") == 0) {
+            printTreeInOrder(root);
+            printf("\n");
+        } else if (strcmp(input, "PREFIXA") == 0) {
+            printTreePreOrder(root);
+            printf("\n");
+        } else if (strcmp(input, "POSFIXA") == 0) {
+            printTreePosOrder(root);
+            printf("\n");
+        } else if (strcmp(input, "P") == 0) {
+            scanf(" %c", &value);
+            if (find(root, value))
+                printf("%c existe\n", value);
+            else
+                printf("%c nao existe\n", value);
+        }
+    }
+    freeTree(root);
+    return 0;
+}
