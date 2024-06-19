@@ -97,7 +97,7 @@ int bigger(int a, int b){
   return (a>b)? a:b;
 }
 
-//Rotação Esquerda
+//Rotação a Direita
 no *leftRotation(no *r){
   no *y, *f;
   y = r->left;
@@ -108,7 +108,7 @@ no *leftRotation(no *r){
   return y;
 }
 
-//Rotação a Direita
+//Rotação Esquerda
 no *rightRotation(no *r){
   no *y, *f;
   y = r->right;
